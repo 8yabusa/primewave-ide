@@ -1,26 +1,31 @@
-@import "tailwindcss";
+:root{
+  --bg:#0d1117;
+  --panel:#0b1220;
+  --border:#1f2a3a;
+  --text:#e6edf3;
+  --muted:#94a3b8;
+  --muted2:#6b7280;
+  --accent:#38bdf8;
+  --accent2:#6366f1;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --rowHover: rgba(56,189,248,.12);
+  --rowActive: rgba(56,189,248,.18);
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --shadow: 0 12px 40px rgba(0,0,0,.35);
+  --radius: 14px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
 }
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:
+    radial-gradient(1200px 600px at 30% -10%, rgba(99,102,241,.22), transparent 60%),
+    radial-gradient(1000px 520px at 80% 0%, rgba(56,189,248,.20), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
 }
+a{ color:inherit; }
