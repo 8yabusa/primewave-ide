@@ -1,8 +1,13 @@
+// src/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PrimeWave | IDE Corporate",
+  // 全ページ共通のデフォルト（ページ側があればそっち優先）
+  title: {
+    default: "PrimeWave",
+    template: "%s",
+  },
   description: "IDE風UIで体験するコーポレートサイト",
 };
 
