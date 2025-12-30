@@ -29,3 +29,10 @@ body{
   font-family:var(--sans);
 }
 a{ color:inherit; }
+
+/* SplitPane: 画面が狭いときは1カラムに */
+@media (max-width: 980px) {
+  ._split_fix {
+    grid-template-columns: 1fr !important;
+  }
+}

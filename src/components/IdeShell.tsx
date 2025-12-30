@@ -17,7 +17,7 @@ export default function IdeShell() {
 
   
   const [pendingNav, setPendingNav] = useState<string | null>(null);
-  
+
   useEffect(() => {
   if (!pendingNav) return;
   router.push(pendingNav);
@@ -92,6 +92,9 @@ function close(path: string) {
           overflow: "hidden",
           boxShadow: "var(--shadow)",
           background: `linear-gradient(180deg, rgba(255,255,255,.03), transparent 60%), var(--panel)`,
+          height: "calc(100vh - 90px)",
+          minHeight: 560,
+          maxHeight: 820,
         }}
       >
         {/* Topbar */}
@@ -124,9 +127,9 @@ function close(path: string) {
         </div>
 
         {/* Main */}
-        <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", minHeight: 640 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", height: "calc(100% - 46px)",minHeight: 0,}}>
           <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
-          <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div style={{ minWidth: 0, minHeight: 0, display: "flex", flexDirection: "column" }}>
             <TabsBar
               tabs={tabs.map((t) => ({ ...t, label: findPageByPath(t.path)?.tabLabel ?? t.path }))}
               activePath={activePath}
