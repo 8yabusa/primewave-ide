@@ -11,7 +11,7 @@ export default function SplitPane({ page }: { page: PageDef }) {
           <div>{page.language.toUpperCase()} · UTF-8</div>
         </div>
         <div style={{ padding: 12, height: "calc(100% - 42px)", overflow: "auto" }}>
-          <CodeViewer code={page.leftCode} />
+          <CodeViewer code={page.leftCode} language={page.language} />
         </div>
       </div>
 
