@@ -71,10 +71,6 @@ a{ color:inherit; }
   z-index: 60;
 }
 
-._ide_sidebar_drawer {
-  /* desktop default */
-}
-
 /* SplitPane: モバイル用タブ */
 ._mobile_pane_tabs {
   display: none;
