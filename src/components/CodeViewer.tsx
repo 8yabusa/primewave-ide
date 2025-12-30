@@ -1,7 +1,7 @@
 // src/components/CodeViewer.tsx
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Prism from "prismjs";
 
 // 必要な言語を読み込み（使うものだけ）
@@ -10,14 +10,18 @@ import "prismjs/components/prism-sql";
 import "prismjs/components/prism-markdown";
 import "prismjs/components/prism-bash";
 
-// テーマCSS（後で自作してもOK）
+// テーマCSS（背景は後で透明化する）
 import "prismjs/themes/prism-tomorrow.css";
 
 import type { Lang } from "@/lib/types";
 
-export default function CodeViewer({ code, language }: { code: string; language: Lang }) {
-  const ref = useRef<HTMLPreElement | null>(null);
-
+export default function CodeViewer({
+  code,
+  language,
+}: {
+  code: string;
+  language: Lang;
+}) {
   const prismLang = useMemo(() => {
     switch (language) {
       case "ts":
@@ -27,25 +31,38 @@ export default function CodeViewer({ code, language }: { code: string; language:
       case "md":
         return "markdown";
       case "http":
-        // httpはprism標準だと弱いのでbash扱いで雰囲気
-        return "bash";
+        return "bash"; // 雰囲気優先
       default:
         return "clike";
     }
   }, [language]);
 
-  const lines = useMemo(() => code.replace(/\n$/, "").split("\n"), [code]);
+  const [activeLine, setActiveLine] = useState<number>(1);
 
+  // codeが変わったらカーソル行を先頭に戻す（好みで維持でもOK）
   useEffect(() => {
-    if (!ref.current) return;
-    Prism.highlightAllUnder(ref.current);
+    setActiveLine(1);
+  }, [code]);
+
+  // PrismでHTML生成（重要：highlightAllUnder は不要）
+  const highlightedHtml = useMemo(() => {
+    const grammar = Prism.languages[prismLang] ?? Prism.languages.clike;
+    return Prism.highlight(code, grammar, prismLang);
   }, [code, prismLang]);
+
+  // 1行ずつに分割して描画
+  const lines = useMemo(() => {
+    // Prismの出力HTMLは \n を保持するので split でOK
+    const arr = highlightedHtml.split("\n");
+    // 最後が空行だけのケースは表示を整える
+    return arr.length === 0 ? [""] : arr;
+  }, [highlightedHtml]);
 
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "52px 1fr",
+        gridTemplateColumns: "56px 1fr",
         border: "1px solid rgba(255,255,255,.06)",
         borderRadius: 12,
         overflow: "hidden",
@@ -63,35 +80,80 @@ export default function CodeViewer({ code, language }: { code: string; language:
           color: "rgba(148,163,184,.55)",
           textAlign: "right",
           userSelect: "none",
-          whiteSpace: "pre",
         }}
       >
-        {lines.map((_, i) => String(i + 1).padStart(2, " ") + "\n")}
+        {lines.map((_, i) => {
+          const n = i + 1;
+          const isActive = n === activeLine;
+          return (
+            <div
+              key={n}
+              onClick={() => setActiveLine(n)}
+              style={{
+                height: 20,
+                lineHeight: "20px",
+                paddingRight: 6,
+                borderRadius: 6,
+                cursor: "pointer",
+                color: isActive ? "rgba(226,232,240,.95)" : "rgba(148,163,184,.55)",
+                background: isActive ? "rgba(56,189,248,.10)" : "transparent",
+              }}
+              title={`Line ${n}`}
+            >
+              {String(n).padStart(2, " ")}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Prism */}
-      <pre
-        ref={ref}
+      {/* コード本体 */}
+      <div
         style={{
-          margin: 0,
-          padding: "10px 12px",
+          padding: "10px 0",
           overflow: "auto",
-          background: "transparent",
           fontFamily: "var(--mono)",
           fontSize: 12.5,
-          lineHeight: 1.6,
+          lineHeight: "20px",
         }}
       >
-        <code className={`language-${prismLang}`}>{code}</code>
-      </pre>
+        {lines.map((html, i) => {
+          const n = i + 1;
+          const isActive = n === activeLine;
+          return (
+            <div
+              key={n}
+              onClick={() => setActiveLine(n)}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                padding: "0 12px",
+                borderLeft: isActive ? "3px solid rgba(56,189,248,.65)" : "3px solid transparent",
+                background: isActive ? "rgba(56,189,248,.08)" : "transparent",
+              }}
+            >
+              <span
+                // Prismの行HTMLをそのまま注入
+                dangerouslySetInnerHTML={{ __html: html.length ? html : "&nbsp;" }}
+              />
+            </div>
+          );
+        })}
+      </div>
 
-      {/* Prismテーマの背景を透明に寄せる（IDE側の背景を活かす） */}
+      {/* PrismテーマをIDE背景に合わせる（背景透明化） */}
       <style jsx global>{`
-        pre[class*="language-"] {
+        /* Prismのデフォ背景を消す */
+        pre[class*="language-"], code[class*="language-"] {
           background: transparent !important;
+          text-shadow: none !important;
         }
-        code[class*="language-"] {
+        /* 行内のフォント統一 */
+        code[class*="language-"], pre[class*="language-"] {
           font-family: var(--mono) !important;
+        }
+        /* 行のhover演出（カーソル感） */
+        ._code_line:hover {
+          background: rgba(255, 255, 255, 0.03);
         }
       `}</style>
     </div>
