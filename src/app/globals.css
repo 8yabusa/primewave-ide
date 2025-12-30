@@ -36,3 +36,196 @@ a{ color:inherit; }
     grid-template-columns: 1fr !important;
   }
 }
+
+/* =========================
+   Mobile responsive (IDE)
+   ========================= */
+
+/* ハンバーガーボタン（PCは隠す） */
+._ide_hamburger {
+  display: none;
+  width: 36px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255,255,255,.03);
+  color: rgba(226,232,240,.9);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* オフキャンバス sidebar */
+._ide_sidebar_wrap {
+  min-height: 0;
+}
+
+._ide_sidebar_overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 60;
+}
+
+._ide_sidebar_drawer {
+  /* desktop default */
+}
+
+/* SplitPane: モバイル用タブ */
+._mobile_pane_tabs {
+  display: none;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(2,6,23,.55);
+}
+
+._mobile_pane_tab {
+  flex: 1 1 auto;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255,255,255,.03);
+  color: rgba(226,232,240,.85);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+._mobile_pane_tab[data-active="true"] {
+  background: rgba(56,189,248,.12);
+  border-color: rgba(56,189,248,.35);
+  color: rgba(226,232,240,.95);
+}
+
+/* モバイル時の挙動 */
+@media (max-width: 980px) {
+  ._ide_hamburger {
+    display: inline-flex;
+  }
+
+  /* Sidebarをドロワー化 */
+  ._ide_sidebar_wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 84vw;
+    max-width: 360px;
+    z-index: 70;
+    transform: translateX(-110%);
+    transition: transform .18s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  ._ide_sidebar_wrap[data-open="true"] {
+    transform: translateX(0);
+  }
+
+  ._ide_sidebar_overlay {
+    display: block;
+  }
+
+  ._ide_sidebar_overlay[data-open="false"] {
+    display: none;
+  }
+
+  /* SplitPane: 1カラムへ */
+  ._split_fix {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* モバイルタブを表示 */
+  ._mobile_pane_tabs {
+    display: flex;
+  }
+
+  /* どちらか片方だけ表示（data-mobile-activeで切替） */
+  ._split_fix[data-mobile-active="editor"] ._pane_inspector {
+    display: none !important;
+  }
+  ._split_fix[data-mobile-active="inspector"] ._pane_editor {
+    display: none !important;
+  }
+}
+
+@media (max-width: 980px) {
+  ._pc_sidebar {
+    display: none !important;
+  }
+}
+
+/* CodeViewer layout */
+._codeviewer_root {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(13, 17, 23, 0.85);
+  min-width: 0;
+}
+
+._codeviewer_gutter {
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 10px 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(148, 163, 184, 0.55);
+  text-align: right;
+  user-select: none;
+  min-width: 0;
+}
+
+._codeviewer_gutterLine {
+  height: 20px;
+  line-height: 20px;
+  padding-right: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgba(148, 163, 184, 0.55);
+  background: transparent;
+}
+
+._codeviewer_gutterLine.is-active {
+  color: rgba(226, 232, 240, 0.95);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+._codeviewer_body {
+  padding: 10px 0;
+  overflow: auto;
+  outline: none;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 20px;
+  min-width: 0;
+}
+
+/* each line */
+._code_line {
+  padding: 0 12px;
+  user-select: text;
+  white-space: pre;
+}
+
+._code_line:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Prism theme: make background transparent so it blends with IDE */
+pre[class*="language-"],
+code[class*="language-"] {
+  background: transparent !important;
+  text-shadow: none !important;
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  font-family: var(--mono) !important;
+}

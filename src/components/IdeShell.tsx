@@ -15,22 +15,22 @@ export default function IdeShell() {
   const router = useRouter();
   const pathname = usePathname();
 
-  
+  // ✅ Hookは必ずコンポーネント内
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pendingNav, setPendingNav] = useState<string | null>(null);
-
-  useEffect(() => {
-  if (!pendingNav) return;
-  router.push(pendingNav);
-  setPendingNav(null);
-}, [pendingNav, router]);
-
 
   // ✅ URL（pathname）から現在ページを決める
   const page = useMemo(() => findPageByPath(pathname), [pathname]);
-
   const tree = useMemo(() => buildTree(), []);
+
   const [tabs, setTabs] = useState<Tab[]>([{ path: "/" }]);
   const [activePath, setActivePath] = useState<string>(pathname);
+
+  useEffect(() => {
+    if (!pendingNav) return;
+    router.push(pendingNav);
+    setPendingNav(null);
+  }, [pendingNav, router]);
 
   // restore tabs
   useEffect(() => {
@@ -43,13 +43,14 @@ export default function IdeShell() {
     } catch {}
   }, []);
 
-  // ✅ URL変更に追従
+  // ✅ URL変更に追従 + モバイルドロワー閉じる
   useEffect(() => {
     setActivePath(pathname);
     setTabs((prev) => {
       const exists = prev.some((t) => t.path === pathname);
       return exists ? prev : [...prev, { path: pathname }];
     });
+    setSidebarOpen(false);
   }, [pathname]);
 
   // persist tabs
@@ -63,28 +64,25 @@ export default function IdeShell() {
     router.push(path);
   }
 
-function close(path: string) {
-  setTabs((prev) => {
-    const next = prev.filter((t) => t.path !== path);
-    const safeNext = next.length ? next : [{ path: "/" }];
+  function close(path: string) {
+    setTabs((prev) => {
+      const next = prev.filter((t) => t.path !== path);
+      const safeNext = next.length ? next : [{ path: "/" }];
 
-    // ここでは router.push しない！！
-    if (path === activePath) {
-      const fallback = safeNext[safeNext.length - 1]?.path ?? "/";
-      setActivePath(fallback);      // OK（state更新）
-      setPendingNav(fallback);      // OK（遷移予約）
-    }
+      if (path === activePath) {
+        const fallback = safeNext[safeNext.length - 1]?.path ?? "/";
+        setActivePath(fallback);
+        setPendingNav(fallback);
+      }
 
-    return safeNext;
-  });
-}
-
+      return safeNext;
+    });
+  }
 
   if (!page) return null;
 
   return (
     <div style={{ maxWidth: 1240, margin: "22px auto", padding: "0 14px 22px" }}>
-      {/* ここから下は元のままでOK（page.fileName等もそのまま使える） */}
       <div
         style={{
           border: `1px solid var(--border)`,
@@ -110,10 +108,21 @@ function close(path: string) {
             backdropFilter: "blur(10px)",
           }}
         >
-          <div style={{ display: "flex", gap: 8, alignItems: "center" }} aria-hidden="true">
-            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fb7185" }} />
-            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fbbf24" }} />
-            <div style={{ width: 10, height: 10, borderRadius: 999, background: "#34d399" }} />
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }} aria-hidden="true">
+              <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fb7185" }} />
+              <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fbbf24" }} />
+              <div style={{ width: 10, height: 10, borderRadius: 999, background: "#34d399" }} />
+            </div>
+
+            <button
+              className="_ide_hamburger"
+              type="button"
+              onClick={() => setSidebarOpen(true)}
+              aria-label="Open menu"
+            >
+              ☰
+            </button>
           </div>
 
           <div style={{ display: "flex", gap: 10, fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)" }}>
@@ -127,8 +136,20 @@ function close(path: string) {
         </div>
 
         {/* Main */}
-        <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", height: "calc(100% - 46px)",minHeight: 0,}}>
-          <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "280px 1fr",
+            height: "calc(100% - 46px)",
+            minHeight: 0,
+          }}
+        >
+          {/* PC Sidebar */}
+          <div className="_pc_sidebar" style={{ display: "block" }}>
+            <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
+          </div>
+
+          {/* Right */}
           <div style={{ minWidth: 0, minHeight: 0, display: "flex", flexDirection: "column" }}>
             <TabsBar
               tabs={tabs.map((t) => ({ ...t, label: findPageByPath(t.path)?.tabLabel ?? t.path }))}
@@ -154,6 +175,16 @@ function close(path: string) {
               <div>main · primewave · {page.fileName}</div>
               <div>{page.language.toUpperCase()} · Dark Theme</div>
             </div>
+          </div>
+
+          {/* ✅ Mobile Drawer (overlay + drawer) */}
+          <div
+            className="_ide_sidebar_overlay"
+            data-open={sidebarOpen}
+            onClick={() => setSidebarOpen(false)}
+          />
+          <div className="_ide_sidebar_wrap" data-open={sidebarOpen}>
+            <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
           </div>
         </div>
       </div>
