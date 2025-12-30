@@ -225,3 +225,100 @@ code[class*="language-"],
 pre[class*="language-"] {
   font-family: var(--mono) !important;
 }
+
+/* ===== SplitPane ===== */
+._split_root {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* mobile tabs: desktopでは隠す */
+._split_mobile_tabs {
+  display: none;
+}
+
+._split_pane {
+  min-width: 0;     /* ✅ これが超重要：内容がはみ出して幅固定になるのを防ぐ */
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+._split_editor {
+  border-right: 1px solid var(--border);
+  background: rgba(13, 17, 23, 0.75);
+}
+
+._split_inspector {
+  background: rgba(2, 6, 23, 0.22);
+}
+
+._split_header {
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  min-width: 0;
+}
+
+._split_body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  padding: 12px;
+  overflow: auto;
+}
+
+/* ===== Mobile behavior ===== */
+@media (max-width: 980px) {
+  ._split_root {
+    grid-template-columns: 1fr;
+  }
+
+  ._split_mobile_tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(2, 6, 23, 0.55);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  ._split_tab {
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(226, 232, 240, 0.92);
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  ._split_tab.is-active {
+    background: rgba(56, 189, 248, 0.16);
+    border-color: rgba(56, 189, 248, 0.35);
+  }
+
+  /* ✅ モバイルでは片方だけ表示して “幅固定” を根本解消 */
+  ._split_pane[data-active="false"] {
+    display: none;
+  }
+
+  /* border-right は不要 */
+  ._split_editor {
+    border-right: none;
+  }
+}
