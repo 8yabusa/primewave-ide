@@ -136,14 +136,8 @@ export default function IdeShell() {
         </div>
 
         {/* Main */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "280px 1fr",
-            height: "calc(100% - 46px)",
-            minHeight: 0,
-          }}
-        >
+        <div className="_ide_main" style={{ height: "calc(100% - 46px)", minHeight: 0 }}>
+
           {/* PC Sidebar */}
           <div className="_pc_sidebar" style={{ display: "block" }}>
             <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
