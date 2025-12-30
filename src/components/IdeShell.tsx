@@ -15,6 +15,16 @@ export default function IdeShell() {
   const router = useRouter();
   const pathname = usePathname();
 
+  
+  const [pendingNav, setPendingNav] = useState<string | null>(null);
+  
+  useEffect(() => {
+  if (!pendingNav) return;
+  router.push(pendingNav);
+  setPendingNav(null);
+}, [pendingNav, router]);
+
+
   // ✅ URL（pathname）から現在ページを決める
   const page = useMemo(() => findPageByPath(pathname), [pathname]);
 
@@ -53,16 +63,22 @@ export default function IdeShell() {
     router.push(path);
   }
 
-  function close(path: string) {
-    setTabs((prev) => {
-      const next = prev.filter((t) => t.path !== path);
-      if (path === activePath) {
-        const fallback = next[next.length - 1]?.path ?? "/";
-        router.push(fallback);
-      }
-      return next.length ? next : [{ path: "/" }];
-    });
-  }
+function close(path: string) {
+  setTabs((prev) => {
+    const next = prev.filter((t) => t.path !== path);
+    const safeNext = next.length ? next : [{ path: "/" }];
+
+    // ここでは router.push しない！！
+    if (path === activePath) {
+      const fallback = safeNext[safeNext.length - 1]?.path ?? "/";
+      setActivePath(fallback);      // OK（state更新）
+      setPendingNav(fallback);      // OK（遷移予約）
+    }
+
+    return safeNext;
+  });
+}
+
 
   if (!page) return null;
 
@@ -95,12 +111,6 @@ export default function IdeShell() {
             <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fb7185" }} />
             <div style={{ width: 10, height: 10, borderRadius: 999, background: "#fbbf24" }} />
             <div style={{ width: 10, height: 10, borderRadius: 999, background: "#34d399" }} />
-          </div>
-
-          <div style={{ display: "flex", gap: 14, fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)" }}>
-            {["File", "Edit", "View", "Go", "Run", "Help"].map((x) => (
-              <span key={x} style={{ cursor: "default" }}>{x}</span>
-            ))}
           </div>
 
           <div style={{ display: "flex", gap: 10, fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)" }}>
