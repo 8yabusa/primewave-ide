@@ -1,3 +1,4 @@
+// src/components/IdeShell.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -15,11 +16,9 @@ export default function IdeShell() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // ✅ Hookは必ずコンポーネント内
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pendingNav, setPendingNav] = useState<string | null>(null);
 
-  // ✅ URL（pathname）から現在ページを決める
   const page = useMemo(() => findPageByPath(pathname), [pathname]);
   const tree = useMemo(() => buildTree(), []);
 
@@ -43,7 +42,7 @@ export default function IdeShell() {
     } catch {}
   }, []);
 
-  // ✅ URL変更に追従 + モバイルドロワー閉じる
+  // URL変更に追従 + モバイルドロワー閉じる
   useEffect(() => {
     setActivePath(pathname);
     setTabs((prev) => {
@@ -93,6 +92,9 @@ export default function IdeShell() {
           height: "calc(100vh - 90px)",
           minHeight: 560,
           maxHeight: 820,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
         }}
       >
         {/* Topbar */}
@@ -106,6 +108,7 @@ export default function IdeShell() {
             borderBottom: "1px solid var(--border)",
             background: "rgba(31,31,31,.55)",
             backdropFilter: "blur(10px)",
+            flex: "0 0 auto",
           }}
         >
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
@@ -126,20 +129,33 @@ export default function IdeShell() {
           </div>
 
           <div style={{ display: "flex", gap: 10, fontFamily: "var(--mono)", fontSize: 12, color: "var(--muted)" }}>
-            <span style={{ padding: "6px 10px", border: `1px solid var(--border)`, borderRadius: 999, background: "rgba(255,255,255,.03)" }}>
+            <span
+              style={{
+                padding: "6px 10px",
+                border: `1px solid var(--border)`,
+                borderRadius: 999,
+                background: "rgba(255,255,255,.03)",
+              }}
+            >
               PrimeWave / corporate
             </span>
-            <span style={{ padding: "6px 10px", border: `1px solid var(--border)`, borderRadius: 999, background: "rgba(255,255,255,.03)" }}>
+            <span
+              style={{
+                padding: "6px 10px",
+                border: `1px solid var(--border)`,
+                borderRadius: 999,
+                background: "rgba(255,255,255,.03)",
+              }}
+            >
               {page.fileName}
             </span>
           </div>
         </div>
 
-        {/* Main */}
-        <div className="_ide_main" style={{ height: "calc(100% - 46px)", minHeight: 0 }}>
-
+        {/* Main (Topbar以外の残りを全部使う) */}
+        <div className="_ide_main" style={{ flex: "1 1 auto", minHeight: 0, minWidth: 0 }}>
           {/* PC Sidebar */}
-          <div className="_pc_sidebar" style={{ display: "block" }}>
+          <div className="_pc_sidebar" style={{ display: "block", minHeight: 0 }}>
             <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
           </div>
 
@@ -151,7 +167,13 @@ export default function IdeShell() {
               onOpen={open}
               onClose={close}
             />
-            <SplitPane page={page} />
+
+            {/* ✅ SplitPane が残りの高さを全部使う */}
+            <div style={{ flex: "1 1 auto", minHeight: 0, minWidth: 0 }}>
+              <SplitPane page={page} />
+            </div>
+
+            {/* Status bar */}
             <div
               style={{
                 height: 34,
@@ -164,6 +186,7 @@ export default function IdeShell() {
                 fontFamily: "var(--mono)",
                 fontSize: 11.5,
                 color: "rgba(148,163,184,.9)",
+                flex: "0 0 auto",
               }}
             >
               <div>main · primewave · {page.fileName}</div>
@@ -171,8 +194,8 @@ export default function IdeShell() {
             </div>
           </div>
         </div>
-                  
-        {/* ✅ Mobile Drawer (overlay + drawer) */}
+
+        {/* Mobile Drawer */}
         <div
           className="_ide_sidebar_overlay"
           data-open={sidebarOpen}

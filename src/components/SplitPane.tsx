@@ -13,7 +13,6 @@ export default function SplitPane({ page }: { page: PageDef }) {
 
   return (
     <div className="_split_root" data-view={view}>
-      {/* ✅ モバイル用タブ（PCでは非表示：CSSで制御） */}
       <div className="_split_mobile_tabs">
         <button
           type="button"
@@ -31,8 +30,10 @@ export default function SplitPane({ page }: { page: PageDef }) {
         </button>
       </div>
 
-      {/* Editor Pane */}
-      <section className="_split_pane _split_editor" data-active={view === "editor"}>
+      <section
+        className="_split_pane _split_editor"
+        data-active={view === "editor" ? "true" : "false"}   // ←ここ重要
+      >
         <div className="_split_header">
           <div>Editor</div>
           <div>{page.language.toUpperCase()} · UTF-8</div>
@@ -42,8 +43,10 @@ export default function SplitPane({ page }: { page: PageDef }) {
         </div>
       </section>
 
-      {/* Inspector Pane */}
-      <section className="_split_pane _split_inspector" data-active={view === "inspector"}>
+      <section
+        className="_split_pane _split_inspector"
+        data-active={view === "inspector" ? "true" : "false"} // ←ここ重要
+      >
         <div className="_split_header">
           <div>{page.inspector.title}</div>
           <div>{page.inspector.subtitle ?? ""}</div>
