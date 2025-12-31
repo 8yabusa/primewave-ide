@@ -12,9 +12,22 @@ export default function TabsBar({
   onClose: (path: string) => void;
 }) {
   return (
-    <div style={{ display: "flex", gap: 8, padding: "10px 10px 0", borderBottom: "1px solid var(--border)", background: "rgba(31,31,31,.25)" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",   // ← タブを下揃え
+        gap: 8,
+        padding: "10px 10px 0",
+        minHeight: 42,
+        borderBottom: "1px solid var(--border)",
+        background: "rgba(31,31,31,.25)",
+      }}
+    >
       {tabs.map((t) => {
         const active = t.path === activePath;
+
+        const borderColor = "var(--border)";
+
         return (
           <div
             key={t.path}
@@ -29,14 +42,20 @@ export default function TabsBar({
               borderRadius: "10px 10px 0 0",
               cursor: "pointer",
               background: active ? "rgba(255,255,255,.04)" : "transparent",
-              border: active ? "1px solid var(--border)" : "1px solid transparent",
+
+              // ✅ border shorthandを使わず、全部個別指定に統一
+              borderTop: active ? `1px solid ${borderColor}` : "1px solid transparent",
+              borderLeft: active ? `1px solid ${borderColor}` : "1px solid transparent",
+              borderRight: active ? `1px solid ${borderColor}` : "1px solid transparent",
               borderBottom: "none",
+
               userSelect: "none",
             }}
             onClick={() => onOpen(t.path)}
             title={t.path}
           >
             <span>{t.label}</span>
+
             {tabs.length > 1 && (
               <button
                 onClick={(e) => {
@@ -49,6 +68,8 @@ export default function TabsBar({
                   color: active ? "var(--text)" : "var(--muted)",
                   cursor: "pointer",
                   fontFamily: "var(--mono)",
+                  padding: 0,
+                  lineHeight: 1,
                 }}
                 aria-label="Close tab"
               >
