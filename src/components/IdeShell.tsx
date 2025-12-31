@@ -104,7 +104,7 @@ export default function IdeShell() {
             justifyContent: "space-between",
             padding: "0 14px",
             borderBottom: "1px solid var(--border)",
-            background: "rgba(2,6,23,.55)",
+            background: "rgba(31,31,31,.55)",
             backdropFilter: "blur(10px)",
           }}
         >
@@ -160,7 +160,7 @@ export default function IdeShell() {
                 justifyContent: "space-between",
                 padding: "0 12px",
                 borderTop: "1px solid var(--border)",
-                background: "rgba(2,6,23,.55)",
+                background: "rgba(31,31,31,.55)",
                 fontFamily: "var(--mono)",
                 fontSize: 11.5,
                 color: "rgba(148,163,184,.9)",
@@ -171,15 +171,16 @@ export default function IdeShell() {
             </div>
           </div>
         </div>
-                  {/* ✅ Mobile Drawer (overlay + drawer) */}
-          <div
-            className="_ide_sidebar_overlay"
-            data-open={sidebarOpen}
-            onClick={() => setSidebarOpen(false)}
-          />
-          <div className="_ide_sidebar_wrap" data-open={sidebarOpen}>
-            <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
-          </div>
+                  
+        {/* ✅ Mobile Drawer (overlay + drawer) */}
+        <div
+          className="_ide_sidebar_overlay"
+          data-open={sidebarOpen}
+          onClick={() => setSidebarOpen(false)}
+        />
+        <div className="_ide_sidebar_wrap" data-open={sidebarOpen}>
+          <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
+        </div>
       </div>
     </div>
   );

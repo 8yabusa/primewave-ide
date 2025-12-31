@@ -1,32 +1,34 @@
 :root{
-  --bg:#0d1117;
-  --panel:#0b1220;
-  --border:#1f2a3a;
-  --text:#e6edf3;
-  --muted:#94a3b8;
-  --muted2:#6b7280;
-  --accent:#38bdf8;
-  --accent2:#6366f1;
+  /* ===== VS Code Dark+ inspired ===== */
+  --bg: #1e1e1e;              /* editor background */
+  --panel: #252526;           /* side panels */
+  --border: #3c3c3c;          /* separators */
+  --text: #d4d4d4;            /* primary text */
+  --muted: #9da5b4;           /* secondary text */
+  --muted2: #6a6a6a;
 
-  --rowHover: rgba(56,189,248,.12);
-  --rowActive: rgba(56,189,248,.18);
+  --accent: #007acc;          /* VSCode blue */
+  --accent2: #3794ff;
 
-  --shadow: 0 12px 40px rgba(0,0,0,.35);
-  --radius: 14px;
+  --rowHover: rgba(0,122,204,.18);
+  --rowActive: rgba(0,122,204,.28);
 
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --shadow: 0 10px 30px rgba(0,0,0,.45);
+  --radius: 12px;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Helvetica, Arial, "Noto Sans JP", sans-serif;
 }
+
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
 body{
   margin:0;
-  background:
-    radial-gradient(1200px 600px at 30% -10%, rgba(99,102,241,.22), transparent 60%),
-    radial-gradient(1000px 520px at 80% 0%, rgba(56,189,248,.20), transparent 55%),
-    var(--bg);
-  color:var(--text);
-  font-family:var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
 }
 a{ color:inherit; }
 
@@ -160,9 +162,9 @@ a{ color:inherit; }
   display: grid;
   grid-template-columns: 56px 1fr;
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
+  border-radius: 0px;
   overflow: hidden;
-  background: rgba(13, 17, 23, 0.85);
+  background: rgba(31, 31, 31, 0.85);
   min-width: 0;
 }
 
@@ -277,6 +279,11 @@ pre[class*="language-"] {
   overflow: auto;
 }
 
+._split_editor ._split_body {
+  padding: 0;        /* ✅ Editor は余白なし */
+}
+
+
 /* ===== Mobile behavior ===== */
 @media (max-width: 980px) {
   ._split_root {
@@ -289,7 +296,7 @@ pre[class*="language-"] {
     gap: 8px;
     padding: 10px 12px;
     border-bottom: 1px solid var(--border);
-    background: rgba(2, 6, 23, 0.55);
+    background: rgba(31, 31, 31, 0.55);
     backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
@@ -382,4 +389,33 @@ pre[class*="language-"] {
   ._ide_sidebar_overlay[data-open="false"] {
     display: none;
   }
+}
+
+._split_editor {
+  background: var(--bg);
+}
+
+._split_inspector {
+  background: var(--panel);
+}
+
+._split_header {
+  background: #2d2d2d;
+  border-bottom: 1px solid var(--border);
+}
+
+._tabsbar {
+  background: #252526;
+  border-bottom: 1px solid var(--border);
+}
+
+._tab {
+  background: #2d2d2d;
+  color: var(--muted);
+}
+
+._tab.is-active {
+  background: var(--bg);
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
 }

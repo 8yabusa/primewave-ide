@@ -12,7 +12,7 @@ export default function TabsBar({
   onClose: (path: string) => void;
 }) {
   return (
-    <div style={{ display: "flex", gap: 8, padding: "10px 10px 0", borderBottom: "1px solid var(--border)", background: "rgba(2,6,23,.25)" }}>
+    <div style={{ display: "flex", gap: 8, padding: "10px 10px 0", borderBottom: "1px solid var(--border)", background: "rgba(31,31,31,.25)" }}>
       {tabs.map((t) => {
         const active = t.path === activePath;
         return (

@@ -36,7 +36,7 @@ export default function SidebarTree({
       className="_sidebar_fix"
       style={{
         borderRight: "1px solid var(--border)",
-        background: "rgba(2,6,23,.35)",
+        background: "rgba(24,24,24,.35)",
       }}
     >
       <div style={{ padding: "12px 12px 10px", borderBottom: "1px solid var(--border)", display: "flex", gap: 10, alignItems: "center" }}>
