@@ -344,3 +344,42 @@ pre[class*="language-"] {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* デフォルト(PC)はドロワーを完全に隠す */
+._ide_sidebar_wrap,
+._ide_sidebar_overlay {
+  display: none;
+}
+
+/* モバイル時だけドロワー有効化 */
+@media (max-width: 980px) {
+  ._ide_sidebar_wrap {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 84vw;
+    max-width: 360px;
+    z-index: 70;
+    transform: translateX(-110%);
+    transition: transform .18s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  ._ide_sidebar_wrap[data-open="true"] {
+    transform: translateX(0);
+  }
+
+  ._ide_sidebar_overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 60;
+  }
+
+  ._ide_sidebar_overlay[data-open="false"] {
+    display: none;
+  }
+}

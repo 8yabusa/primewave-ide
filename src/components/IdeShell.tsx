@@ -170,8 +170,8 @@ export default function IdeShell() {
               <div>{page.language.toUpperCase()} · Dark Theme</div>
             </div>
           </div>
-
-          {/* ✅ Mobile Drawer (overlay + drawer) */}
+        </div>
+                  {/* ✅ Mobile Drawer (overlay + drawer) */}
           <div
             className="_ide_sidebar_overlay"
             data-open={sidebarOpen}
@@ -180,7 +180,6 @@ export default function IdeShell() {
           <div className="_ide_sidebar_wrap" data-open={sidebarOpen}>
             <SidebarTree tree={tree} activePath={activePath} onOpen={open} />
           </div>
-        </div>
       </div>
     </div>
   );
