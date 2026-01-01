@@ -81,7 +81,7 @@ export default function IdeShell() {
   if (!page) return null;
 
   return (
-    <div style={{ maxWidth: 1240, margin: "22px auto", padding: "0 14px 22px" }}>
+    <div style={{width: "100vw", height: "100vh", margin: 0, padding: "14px", boxSizing: "border-box",}}>
       <div
         style={{
           border: `1px solid var(--border)`,
