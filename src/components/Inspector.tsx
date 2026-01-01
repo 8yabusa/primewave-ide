@@ -21,7 +21,7 @@ export default function Inspector({ blocks }: { blocks: InspectorBlock[] }) {
         if (b.type === "kv") {
           return (
             <Card key={idx} title={b.title}>
-              <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", fontFamily: "var(--mono)", fontSize: 12.5 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", fontFamily: "var(--mono)", fontSize: 12.5, }}>
                 {b.rows.map((r, i) => (
                   <Row key={i} k={r.k} v={r.v} />
                 ))}
@@ -105,13 +105,28 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 }
 
 function Row({ k, v }: { k: string; v: string }) {
+  const isEmail = k.toLowerCase().includes("e-mail");
+
   return (
     <>
       <div style={{ padding: "10px 12px", color: "rgba(148,163,184,.9)", background: "rgba(255,255,255,.02)", borderBottom: "1px solid rgba(255,255,255,.05)" }}>
         {k}
       </div>
-      <div style={{ padding: "10px 12px", color: "var(--text)", borderBottom: "1px solid rgba(255,255,255,.05)", overflowWrap: "anywhere" }}>
-        {v}
+      <div style={{ padding: "10px 12px", color: "var(--text)", borderBottom: "1px solid rgba(255,255,255,.05)", overflowWrap: "anywhere", whiteSpace: "pre-line", }}>
+        {isEmail ? (
+          <a
+            href="/contact"
+            style={{
+              color: "var(--accent)",
+              textDecoration: "underline",
+              fontFamily: "var(--mono)",
+            }}
+          >
+            {v}
+          </a>
+        ) : (
+          v
+        )}
       </div>
     </>
   );

@@ -56,32 +56,24 @@ export default About;
     language: "ts",
     leftCode: `// /about/company.ts
 
-type JPY = string;
-
 export const Company = {
   name: "PrimeWave株式会社",
-  englishName: "PrimeWave Inc.",
+  address: {
+    postalCode: "〒101-0022",
+    address: "東京都中央区日本橋室町1丁目11番12号 日本橋水野ビル7階",
+  },
+  representative: "代表取締役 中村 隼也",
   business: [
-    "SES（System Engineering Service）事業",
-    "受託開発 / 技術支援",
+    "SES事業",
+    "ITエンジニア教育事業",
+    "DXコンサルティング事業",
   ],
-  founded: "YYYY-MM-DD",
-  capital: "¥X,XXX,XXX" as JPY,
-  location: "東京都XXXX区XXXX",
-  representative: "代表取締役 〇〇〇〇",
-  employees: "X名",
+  founded: "2024-04",
   contact: {
     email: "info@primewave.co.jp",
     form: "/contact",
   },
-  values: {
-    mission: "エンジニアの待遇を改善する。",
-    principles: [
-      "単価・契約・マージンの透明性",
-      "技術者が主役の意思決定",
-      "長期視点のキャリア支援",
-    ],
-  },
+  invoice: "T3010001244451",
 } as const;
 
 export default Company;
@@ -90,31 +82,17 @@ export default Company;
       title: "Inspector",
       subtitle: "CompanyProfile",
       blocks: [
-        { type: "hero", title: "// Company profile", lines: ["事実は、コードで表す。"] },
         {
           type: "kv",
           title: "Basic",
           rows: [
             { k: "会社名", v: "PrimeWave株式会社" },
-            { k: "英文名", v: "PrimeWave Inc." },
-            { k: "代表者", v: "代表取締役 〇〇〇〇" },
-            { k: "設立", v: "YYYY-MM-DD" },
-            { k: "資本金", v: "¥X,XXX,XXX" },
-            { k: "所在地", v: "東京都XXXX区XXXX" },
-            { k: "連絡先", v: "info@primewave.co.jp" },
-          ],
-        },
-        { type: "tags", title: "Business", tags: ["SES", "受託開発", "技術支援"] },
-        {
-          type: "list",
-          title: "Principles",
-          items: ["単価・契約・マージンの透明性", "技術者が主役の意思決定", "長期視点のキャリア支援"],
-        },
-        {
-          type: "cta",
-          buttons: [
-            { label: "お問い合わせ", href: "/contact", variant: "primary" },
-            { label: "採用情報", href: "/careers", variant: "secondary" },
+            { k: "所在地", v: "〒101-0022\n東京都中央区日本橋室町1丁目11番12号 日本橋水野ビル7階" },
+            { k: "代表者", v: "代表取締役 中村 隼也" },
+            { k: "事業内容", v: "SES事業\nITエンジニア教育事業\nDXコンサルティング事業" },
+            { k: "設立", v: "2024年4月" },
+            { k: "E-mail", v: "info@primewave.co.jp" },
+            { k: "適格請求書発行事業者登録番号", v: "T3010001244451" },
           ],
         },
       ],
